@@ -8,7 +8,8 @@ description: The sandbox, installer, live and WooCommerce tests — what each on
 ```
 
 Runs the sandbox test and the installer test below (`./test.sh --cache all` = sandbox only,
-`./test.sh install` = installer only).
+`./test.sh install` = installer only). The flag list is on the [test command
+page](../commands/test.md).
 
 ## Sandbox
 

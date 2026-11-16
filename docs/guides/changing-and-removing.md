@@ -98,4 +98,6 @@ templates.
 ```
 
 A plain `./install.sh yourshop.com` run from a terminal asks about the add-on for each WooCommerce
-site. `./install.sh` without sites (the update after `git pull`) refreshes every installed copy.
+site. `./install.sh` without sites (the update after `git pull`) refreshes every installed copy. What
+the add-on purges, and what it leaves alone, is on the [WooCommerce purge
+guide](./woocommerce-purge.md).

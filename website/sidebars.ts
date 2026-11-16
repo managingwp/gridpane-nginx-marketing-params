@@ -18,6 +18,19 @@ const sidebars: SidebarsConfig = {
         'guides/redis-page-cache',
         'guides/testing',
         'guides/nginx-helper-preload',
+        'guides/woocommerce-purge',
+        'guides/exact-cache-log',
+        'guides/perf-digest',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Commands',
+      items: [
+        'commands/install',
+        'commands/test',
+        'commands/cache-log',
+        'commands/perf-digest',
       ],
     },
     {

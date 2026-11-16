@@ -29,7 +29,8 @@ the add-on sends `Do-Not-Cache: 1` when `is_cart()`, `is_checkout()` (including 
 
 GridPane's FastCGI (`fastcgi_no_cache`) and Redis (`srcache_store_skip`) templates both honour
 `$upstream_http_do_not_cache`, so the page is never stored. Filter: `gp_woo_never_cache_page`. The
-add-on does not depend on the nginx switch.
+add-on does not depend on the nginx switch; see the [WooCommerce purge
+guide](../guides/woocommerce-purge.md).
 
 ## Existing entries are not removed
 

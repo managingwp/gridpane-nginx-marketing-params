@@ -26,8 +26,8 @@ git clone https://github.com/SHIFT64/gridpane-nginx-marketing-params.git /root/g
 cd /root/gridpane-nginx-marketing-params && ./test.sh && ./install.sh yoursite.com
 ```
 
-`./install.sh` without a site name installs or updates the server-wide engine only. The full set of
-modes is covered on the install command page, once that page lands.
+`./install.sh` without a site name installs or updates the server-wide engine only. Every mode is on
+the [install command page](../commands/install.md).
 
 ## What the script does
 
