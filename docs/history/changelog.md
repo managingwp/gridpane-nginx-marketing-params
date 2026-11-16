@@ -13,6 +13,7 @@ reverted by the next run.
 - docs(guides): move changing, Redis, testing and Preload Cache into guides (ca9b045)
 - docs(reference): migrate parameters, mechanism, limitations and the Lua comparison (5ba4379)
 - docs(site): scaffold the Docusaurus site over the root docs tree (b800dbf)
+- fix(cache-log): use the gnmp short name for the cache log (38eb8b0)
 - chore: add /plans to .gitignore for external plans (db007ad)
 - fix(perf-digest): count productfinder scrapers as bots (#8) (8f70a81)
 - feat: add exact redis cache log and nightly discord perf digest (#7) (bdffadc)

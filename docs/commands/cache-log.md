@@ -18,9 +18,15 @@ are already current are left alone.
 
 ## Files
 
-- `/etc/nginx/conf.d/s64-cachelog.conf` — one `log_format s64cache`.
-- `/var/www/<site>/nginx/s64-cachelog-main-context.conf` — one `access_log` line, next to GridPane's
+- `/etc/nginx/conf.d/gnmp-cachelog.conf` — one `log_format gnmpcache`.
+- `/var/www/<site>/nginx/gnmp-cachelog-main-context.conf` — one `access_log` line, next to GridPane's
   own `access_log` in the `server` block.
+
+The `gnmp` prefix is the repository's short name; see [naming](../contributing/repository-layout.md#naming).
+An install from before those names (`s64-cachelog.conf`, `log_format s64cache`,
+`s64-cachelog-main-context.conf`) is migrated by the next enable run: the site file is rewritten, the
+old site file removed, and the old `log_format` file removed once no site uses it. `--status` reports
+anything still on the old names.
 
 No GridPane-managed file is edited. GridPane's logrotate (`/var/log/nginx/*log`) rotates
 `/var/log/nginx/<site>.cache.log` together with the main log.

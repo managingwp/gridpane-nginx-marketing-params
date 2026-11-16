@@ -11,7 +11,7 @@ server/marketing-params/        → /etc/nginx/marketing-params/  (php-context.c
 server/stubs/                   → /etc/nginx/conf.d/marketing-params.conf
 site/                           → /var/www/<site>/nginx/  (switch + flag; FastCGI or Redis variant)
 extras/woo-purge/               → /var/www/<site>/htdocs/wp-content/mu-plugins/gp-woo-purge.php
-extras/cache-log/               optional exact Redis cache log: install.sh, s64-cachelog.conf → /etc/nginx/conf.d/ (+ one file per site)
+extras/cache-log/               optional exact Redis cache log: install.sh, gnmp-cachelog.conf → /etc/nginx/conf.d/ (+ one file per site)
 extras/perf-digest/             optional nightly Discord digest: install.sh, s64-nginx-perf.sh + s64-slow-catch.sh → /usr/local/bin/
 tests/                          sandbox_test.py, install_test.py, live_test.py, fake_php.py (PHP-FPM stand-in), woo_purge_test.php
 docs/                           this manual; the source pages of the documentation site
@@ -26,3 +26,20 @@ scripts/                        check-docs-site.sh, the gate the site build runs
 - `build-engine.py` is generated output's source: `engine.conf` is never edited by hand.
 - `tests/` holds the throw-away nginx harness; nothing there is installed on a server.
 - `website/` is a build input only: no server loads it, and `install.sh` never copies it.
+
+## Naming
+
+The repository's short name is **gnmp** (gridpane nginx marketing params). Files the optional add-ons
+create on the server carry it:
+
+- **Exact cache log:** `/etc/nginx/conf.d/gnmp-cachelog.conf` (one `log_format gnmpcache`) and
+  `/var/www/<site>/nginx/gnmp-cachelog-main-context.conf`.
+- **Earlier releases used `s64`** for the same files: `s64-cachelog.conf`, `log_format s64cache` and
+  `s64-cachelog-main-context.conf`. `extras/cache-log/install.sh` migrates them on the next enable
+  run: the site file is rewritten with the new names, the old file is removed, and the old
+  `log_format` file goes once no site uses it. `--status` reports anything still on the old names.
+- **The core installer keeps its `marketing-params` names** (`/etc/nginx/marketing-params/`,
+  `marketing-params-*-context.conf`, `$gp_mkt_*`), which match GridPane's own file naming.
+- **`extras/perf-digest/` keeps its `s64` script names** (`s64-nginx-perf.sh`, `s64-slow-catch.sh`,
+  their config, cron and history paths): installed cron lines and copies use those names. Only its
+  comments that refer to the cache-log files use the `gnmp` names.
