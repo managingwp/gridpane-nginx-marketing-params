@@ -44,6 +44,20 @@ const sidebars: SidebarsConfig = {
         'reference/gridpane-lua-comparison',
       ],
     },
+    {
+      type: 'category',
+      label: 'Contributing',
+      items: [
+        'contributing/repository-layout',
+        'contributing/development',
+        'contributing/docs',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'History',
+      items: ['history/changelog'],
+    },
   ],
 };
 
