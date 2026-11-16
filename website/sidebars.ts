@@ -12,6 +12,16 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
+      label: 'Guides',
+      items: [
+        'guides/changing-and-removing',
+        'guides/redis-page-cache',
+        'guides/testing',
+        'guides/nginx-helper-preload',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Reference',
       items: [
         'reference/parameters',

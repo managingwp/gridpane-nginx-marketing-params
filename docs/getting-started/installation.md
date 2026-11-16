@@ -52,6 +52,9 @@ cd /root/gridpane-nginx-marketing-params && git pull && ./test.sh && ./install.s
 `./install.sh` on its own updates the engine and rewrites every site's switch files for the new
 version; sites stay on or off as they were. Running it after `git pull` is all an update needs.
 
+A site on GridPane's Redis page cache works the same way; the differences are on the
+[Redis page cache](../guides/redis-page-cache.md) page.
+
 ## The update check
 
 Every install command (`./install.sh [sites]`, `--full`, `--woo-purge`) first asks GitHub for the
@@ -87,4 +90,5 @@ Each of these is skipped, with the reason printed:
 - a template or another `*-php-context.conf` of the site (or a file it includes) that sets the cache
   key or `REQUEST_URI` again after the switch.
 
-If you change a site's cache type in GridPane, run `./install.sh <site>` again.
+If you change a site's cache type in GridPane, run `./install.sh <site>` again — see
+[changing and removing](../guides/changing-and-removing.md).

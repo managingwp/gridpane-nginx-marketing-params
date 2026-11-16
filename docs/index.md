@@ -47,3 +47,6 @@ whatever GridPane's templates say.
 - [How it works](./reference/how-it-works.md) — the decision point, the files it touches, and what
   survives a GridPane update.
 - [The parameter list](./reference/parameters.md) — the grammar, and which parameters belong on it.
+- [Redis page cache](./guides/redis-page-cache.md) — what changes on a srcache site.
+- [Changing and removing](./guides/changing-and-removing.md) — switch off, uninstall, cache-type
+  changes, clones and staging copies.
