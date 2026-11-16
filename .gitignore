@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 temp/
 /plans
+website/node_modules/
+website/build/
+website/.docusaurus/

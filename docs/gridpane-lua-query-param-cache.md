@@ -3,7 +3,7 @@
 GridPane announced the feature in **Platform & Scripts v1.2.1514** (2026-09-29) as "Query Parameter Caching (nginx + lua) gp-cli … Documentation coming soon". As of this writing there is no KB article and no CLI help. Everything below comes from two sources:
 
 - **The gp-cli source code.** `/usr/local/bin/lib/{stack,site,nginx}.sh`, gp-cli **1.2.1518**, configs 1.2.90, GridPane nginx 1.30.4.
-- **A live A/B test on one WordPress + WooCommerce site with FastCGI caching** (2026-10-06). The same scripted matrix ran three times, one mode after another: stock GridPane, GridPane Lua, and [this repo](../README.md).
+- **A live A/B test on one WordPress + WooCommerce site with FastCGI caching** (2026-10-06). The same scripted matrix ran three times, one mode after another: stock GridPane, GridPane Lua, and [this repo](https://github.com/SHIFT64/gridpane-nginx-marketing-params/blob/main/README.md).
 
 GridPane may change the feature at any time, so treat this as a snapshot of that version.
 
@@ -143,4 +143,4 @@ Limits of the test:
 - the cookie and redirect cases used small test PHP scripts;
 - performance and memory figures come from a single session.
 
-For the side-by-side comparison with this repo, see [README → GridPane Lua (hidden) vs this repo](../README.md#gridpane-lua-hidden-vs-this-repo). **Never run both on the same site.**
+For the side-by-side comparison with this repo, see [README → GridPane Lua (hidden) vs this repo](https://github.com/SHIFT64/gridpane-nginx-marketing-params/blob/main/README.md#gridpane-lua-hidden-vs-this-repo). **Never run both on the same site.**
