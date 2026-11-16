@@ -89,6 +89,7 @@ const config: Config = {
           title: 'Docs',
           items: [
             {label: 'Installation', to: '/getting-started/installation'},
+            {label: 'How it works', to: '/reference/how-it-works'},
           ],
         },
         {

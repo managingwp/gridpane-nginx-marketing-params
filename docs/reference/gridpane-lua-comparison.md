@@ -1,9 +1,12 @@
-# GridPane's Lua "Query Parameter Caching": how it works and what we found
+---
+title: GridPane Lua query-param cache
+description: What GridPane's hidden Lua query-parameter cache does, what we measured on a live WooCommerce site, and how it compares with this repository.
+---
 
 GridPane announced the feature in **Platform & Scripts v1.2.1514** (2026-09-29) as "Query Parameter Caching (nginx + lua) gp-cli … Documentation coming soon". As of this writing there is no KB article and no CLI help. Everything below comes from two sources:
 
 - **The gp-cli source code.** `/usr/local/bin/lib/{stack,site,nginx}.sh`, gp-cli **1.2.1518**, configs 1.2.90, GridPane nginx 1.30.4.
-- **A live A/B test on one WordPress + WooCommerce site with FastCGI caching** (2026-10-06). The same scripted matrix ran three times, one mode after another: stock GridPane, GridPane Lua, and [this repo](https://github.com/SHIFT64/gridpane-nginx-marketing-params/blob/main/README.md).
+- **A live A/B test on one WordPress + WooCommerce site with FastCGI caching** (2026-10-06). The same scripted matrix ran three times, one mode after another: stock GridPane, GridPane Lua, and [this repo](../index.md).
 
 GridPane may change the feature at any time, so treat this as a snapshot of that version.
 
@@ -100,7 +103,7 @@ To check your own pages for HTML echoes:
 
 ### Suggested fixes
 
-1. For requests the feature makes cacheable, pass PHP the **clean** URL: an empty `QUERY_STRING` and `REQUEST_URI` = path. Re-append the original parameters to same-host 3xx `Location` headers so WordPress redirects keep them. This is what this repo does; see [`server/marketing-params/php-context.conf`](../server/marketing-params/php-context.conf).
+1. For requests the feature makes cacheable, pass PHP the **clean** URL: an empty `QUERY_STRING` and `REQUEST_URI` = path. Re-append the original parameters to same-host 3xx `Location` headers so WordPress redirects keep them. This is what this repo does; see [`server/marketing-params/php-context.conf`](https://github.com/managingwp/gridpane-nginx-marketing-params/blob/main/server/marketing-params/php-context.conf).
 2. At minimum, don't store a response that carries `Set-Cookie` when `skip_reason = ignored_query_string`. That stops cookie replay, but not HTML echoes.
 3. Document the rule: only parameters that are read in **JavaScript** belong on the list.
 
@@ -143,4 +146,37 @@ Limits of the test:
 - the cookie and redirect cases used small test PHP scripts;
 - performance and memory figures come from a single session.
 
-For the side-by-side comparison with this repo, see [README → GridPane Lua (hidden) vs this repo](https://github.com/SHIFT64/gridpane-nginx-marketing-params/blob/main/README.md#gridpane-lua-hidden-vs-this-repo). **Never run both on the same site.**
+## Side by side with this repo
+
+| | GridPane Lua (hidden) | This repo |
+|---|---|---|
+| Setup | `gp stack nginx -lua query-param-cache ensure-ready`, then `gp site <site> -lua-query-param-cache on`. Needs GridPane nginx 1.28.x/1.30.x. nginx reloads; it restarts fully only if LuaJIT is not loaded yet (on the test server it already was, so it reloaded). | `./install.sh <site>` (`nginx -t`, reload, rollback) |
+| Docs / maintenance | Only a changelog entry (v1.2.1514, "documentation coming soon"); maintained by GridPane | This site plus tests; maintained by you |
+| Page-cache types | FastCGI, Redis, proxy-Redis | FastCGI, Redis |
+| No redirect, shared entry, unknown parameter → bypass, purge | ✅ | ✅ |
+| What PHP sees when the page is cached (MISS) | **The original URL.** Whatever the page renders from the first visitor's parameters is cached for everyone. Live: the WooCommerce home page was cached with the first visitor's tracking value 34× and served to later clean visitors. A cookie that PHP built from gclid was replayed from the cache. | **The clean URL** (0 echoes, no cookie). Trade-off: listed parameters never reach PHP on cacheable pages (see [the golden rule](./parameters.md#the-golden-rule)). |
+| WordPress redirects (trailing slash, www → apex) | ✅ keep parameters | ✅ keep parameters |
+| Same-host redirect that drops the query | Parameters lost (as in stock) | Parameters re-appended |
+| Custom skip rules | Any rule wins (it never lowers `$skip_cache`) | Rules must set a `$skip_reason`, otherwise overridden |
+| Default list | 4 prefixes + 32 names. Misses e.g. dclid, srsltid, ttclid, twclid, li_fat_id, yclid, `mtm_*`, `pk_*`, _hsenc, fbadid (some ship commented out) | 4 prefixes + 72 names, covering those. Misses GridPane's `tw_*`, njclid, `cq_*`, `aaa_*`, gtm_debug. Includes campaignid/adgroupid, which GridPane deliberately leaves out |
+| Matching | Case-sensitive. Any `;` or malformed `%` → bypass | Case-insensitive. `;` / malformed `%` inside values accepted |
+| Limits | 64 params / 4096 bytes | 24 / 2048 by default (configurable up to 48 / 8192) |
+| Editing the list | Strict `exact/prefix` grammar, then `gp … query-param-cache regen` (probe, `nginx -t`, rollback) | nginx map syntax, then `./install.sh --apply-list` (`nginx -t`, last good list restored on error) |
+| Lifecycle | GridPane-managed: clones, migrations, staging, aliases. In the tested version `on` snapshots the site's cache template, so later GridPane template fixes need `on` / `regenerate -force-rewrite` again (this may change) | Never edits GridPane templates, but forces the stock cache key and relies on the `-query_string` reason. Re-run `./test.sh` after GridPane updates |
+| Observability | `X-Grid-Cache-Skip: ignored_query_string` on every request with a query (also on hits and POST); bypass reason `-query_param` | `X-Grid-Cache-Mkt: ignored`; GridPane's reasons untouched otherwise |
+| Performance (HIT) | ≈ 830–840 req/s. Plus ≈ 2 MB RSS per nginx process (single snapshot) | ≈ 820–830 req/s. Stock for reference: 849 req/s clean hit, but **12 req/s** for a marketing URL (bypass → PHP) |
+| Revert | `off` + `gp stack nginx -lua disable`. Leaves inert files behind. Purge afterwards | `./install.sh --disable` / `--uninstall` |
+
+**When to choose which**
+
+- **GridPane Lua** is the better fit for proxy-Redis (ModSecurity) caching, or when you want everything
+  vendor-managed. Use it only if your pages provably do not render query parameters into HTML or
+  cookies. To check, request a page with a unique `gclid`, then the clean URL, and search the HTML and
+  `Set-Cookie`. (srcache never stores `Set-Cookie`, so on Redis only HTML echoes are a risk;
+  WordPress core's comment form is one.)
+- **This repo** is the better fit for FastCGI and Redis sites whose theme or plugins echo parameters
+  (WooCommerce and WordPress's comment form did), or when you want the broader default list. In
+  exchange you accept: PHP never sees listed parameters, custom skip rules need a reason, and you
+  maintain it yourself.
+
+**Never run both on the same site.**

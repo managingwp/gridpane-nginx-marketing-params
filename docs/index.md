@@ -44,3 +44,6 @@ whatever GridPane's templates say.
 
 - [Install it on a GridPane server](./getting-started/installation.md) — one engine per server, one
   switch per site.
+- [How it works](./reference/how-it-works.md) — the decision point, the files it touches, and what
+  survives a GridPane update.
+- [The parameter list](./reference/parameters.md) — the grammar, and which parameters belong on it.

@@ -10,6 +10,17 @@ const sidebars: SidebarsConfig = {
       label: 'Getting started',
       items: ['getting-started/installation'],
     },
+    {
+      type: 'category',
+      label: 'Reference',
+      items: [
+        'reference/parameters',
+        'reference/how-it-works',
+        'reference/never-cached-pages',
+        'reference/limitations',
+        'reference/gridpane-lua-comparison',
+      ],
+    },
   ],
 };
 
