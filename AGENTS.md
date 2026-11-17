@@ -1,12 +1,15 @@
 # AGENTS.md
 
-Guidance for agents changing this repository. It records the constraints a change has to respect; the [README](README.md) explains the behaviour to users, and [docs/](docs/) holds the background.
+Guidance for agents changing this repository. It records the constraints a change has to respect; the [README](README.md) is the entry point, and [docs/](docs/) holds the manual that is published as the documentation site.
 
 ## What this is
 
 Nginx configuration plus bash installers that make GridPane's FastCGI and Redis page caches ignore marketing query parameters (`gclid`, `utm_*`, …) without a redirect. Everything runs on a GridPane server against real nginx. Nothing here is an application and nothing runs in a browser.
 
-The README is the user-facing source of truth for paths, behaviour and commands. A change to any of those updates it in the same commit.
+The manual lives in `docs/` and is published from `website/`; the README is its doorway (title, the
+guarantees, a generated index table, a quick start). A change to behaviour, file names, install paths
+or commands updates the owning page under `docs/` in the same commit, and `README.md` only when its
+summary or quick start changes. `docs/contributing/docs.md` holds the docs contract.
 
 ## Non-negotiables
 
@@ -30,6 +33,8 @@ The repository's short name is **gnmp** (gridpane nginx marketing params). Files
 - `install.sh` — server-wide engine plus the per-site switch/flag; performs the release update check.
 - `build-engine.py` — generates `engine.conf` at install time from the map chain and `params.list`. It is not committed; `install.sh` runs it with the saved limits.
 - `server/` — engine sources and the `conf.d` stub; `site/` — per-site switch and flag templates; `extras/` — optional add-ons; `tests/` — sandbox, installer, live and WooCommerce tests.
+- `docs/` — the manual, one page per topic; `website/` — the Docusaurus site that publishes it;
+  `scripts/check-docs-site.sh` — the gate every docs change runs.
 - `plans/` is a symlink to an external plans directory and is gitignored. Keep it out of commits.
 
 ## Tests
@@ -41,6 +46,7 @@ The repository's short name is **gnmp** (gridpane nginx marketing params). Files
 
 ## Docs, versions and commits
 
-- Update the README whenever behaviour, file names, install paths or commands change.
+- Update the page under `docs/` that owns the behaviour, file names, install paths or commands, in the
+  same commit; the README only when its summary or quick start changes.
 - One semantic version covers the repository. Releases are tags `vX.Y.Z`; `extras/woo-purge/gp-woo-purge.php`'s `Version:` header matches the release. Installers treat only release tags as updates, so untagged commits on `main` are not updates.
 - Commit subjects follow the existing conventional style (`feat(scope): …`, `fix(scope): …`, `docs: …`, `chore: …`) and the body explains why.
