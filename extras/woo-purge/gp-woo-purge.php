@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WooCommerce purge for Nginx Helper
  * Description: Keeps the cart, checkout and account pages out of the GridPane page cache whatever their slug. Purges the page cache of a product, its archives, the shop page and the home page when WooCommerce changes a price or a stock status without a post update (orders, REST API, imports, bulk edit, scheduled sales). Trims Nginx Helper's own purges: no orders/coupons, no feeds, no AMP fetches, one home-page purge per request for term edits, all sent after the response. Installed by gridpane-nginx-marketing-params.
- * Version: 0.4.1
+ * Version: 0.5.2
  * Requires PHP: 7.4
  *
  * Why: Nginx Helper purges on `transition_post_status`, i.e. only when WordPress updates the post.
